@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import './textbox.css';
+import { connect } from 'react-redux';
 
 class Textbox extends React.Component {
 
@@ -9,7 +10,7 @@ class Textbox extends React.Component {
     }
 
     onAddTask2 = () => {
-        this.props.onAddTask();
+        this.props.onAddTask(this.props.labelTask);
     }
 
     editTask = () => {
@@ -41,4 +42,27 @@ class Textbox extends React.Component {
 
 }
 
-export default Textbox;
+const mapStateToProps = ({ taskReducer }) => {
+    const { labelTask } = taskReducer;
+    return {
+        labelTask
+    }
+}
+
+const mapDispatchToProps  = (dispatch) => {
+    return {
+        onAddTask: (detail) => {
+            dispatch({
+                type: 'ADD_TASK',
+                detail,
+            })
+        },
+        onChangeTask: (detail) => {
+            dispatch({
+                type: 'CHANGE_TASK',
+                detail,
+            })
+        }
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Textbox);

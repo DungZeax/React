@@ -2,23 +2,16 @@ import React from 'react';
 import './content.css';
 import InputTag from '../input-task';
 import Task from '../task';
+import { connect } from 'react-redux';
 
 class Content extends React.Component {
     state = {
-        tasks: ['Task 1', 'Task 2', 'Task 3', 'Task 4'],
         labelTask: '',
         statusBtn: 'save',
         taskEdit: '',
     }
 
-    onAddTask = () => {
-        const tasks = this.state.tasks;
-        const labelTask = this.state.labelTask;
-        const newTasks = [...tasks, labelTask];
-        this.setState({
-            tasks: newTasks
-        })
-    }
+
 
     onChangeTask = (val) => {
         this.setState({ labelTask: val})
@@ -45,7 +38,7 @@ class Content extends React.Component {
     }
  
     renderTask = () => {
-        return this.state.tasks.map((task, index) => {
+        return this.props.tasks.map((task, index) => {
             return <Task onDeleteTag={() => this.onDeleteTag(index)} onEditTask={() => this.onEditTask(index)}>{task}</Task>
         })
     }
@@ -57,9 +50,6 @@ class Content extends React.Component {
                 <InputTag
                     editTask={this.editTask}
                     statusBtn={this.state.statusBtn}
-                    labelTask={this.state.labelTask} 
-                    onAddTask={this.onAddTask} 
-                    onChangeTask={this.onChangeTask} 
                 />
                 {
                     this.renderTask()
@@ -69,4 +59,12 @@ class Content extends React.Component {
     }
 }
 
-export default Content;
+const mapStateToProps = (state) => {
+    const { taskReducer } = state;
+    const { tasks } = taskReducer;
+    return {
+        tasks
+    }
+}
+
+export default connect(mapStateToProps)(Content);
